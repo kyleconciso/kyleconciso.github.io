@@ -366,3 +366,25 @@ footer {
     margin-bottom: 1rem;
   }
 }
+
+/* Add this to the end of static/style.css */
+
+.contact-buttons {
+  display: flex;
+  gap: 0.5rem; /* Adds space between the buttons */
+  flex-wrap: wrap; /* Allows buttons to wrap on smaller screens */
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.contact-buttons a {
+  text-decoration: none; /* Removes underline on hover for badges */
+}
+
+.contact-buttons img {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.contact-buttons img:hover {
+  opacity: 0.85;
+}
