@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en" }}">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    {{/* This is where the unique content of each page will be injected */}}
+    {{- block "main" . }}{{- end }}
+
+    {{/* Common theme switcher button */}}
+    <button id="theme-switcher" class="theme-switcher" title="Toggle dark mode">
+      ◐
+    </button>
+
+    {{/* Common theme switcher script */}}
+    <script>
+      const themeSwitcher = document.getElementById("theme-switcher");
+      const doc = document.documentElement;
+      const savedTheme =
+        localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+      doc.setAttribute("data-theme", savedTheme);
+      themeSwitcher.addEventListener("click", () => {
+        const currentTheme = doc.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        doc.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      });
+    </script>
+</body>
+</html>

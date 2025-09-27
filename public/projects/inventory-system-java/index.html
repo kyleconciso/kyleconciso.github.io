@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventory System Java | Psalmwel Kyle M. Conciso - Portfolio</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    
+<div class="container">
+  <a href="/" class="back-link">&larr; Back to Portfolio</a>
+  <h1>Inventory System Java</h1>
+
+  <div class="project-links">
+    
+      <a href="https://www.github.com/kyleconciso/inventory-system-java" target="_blank">View Repository &rarr;</a>
+    
+    
+  </div>
+
+  
+  <div class="video-container">
+    <iframe
+      src="https://www.youtube.com/embed/AXI4nSz5l2s"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+  
+  
+  
+  <h2>Technologies Used</h2>
+  <div class="tech-tags">
+    <p>
+      
+        <code>Java</code>
+      
+        <code>javax.swing</code>
+      
+        <code>FlatLaf</code>
+      
+        <code>Java Object Serialization</code>
+      
+        <code>Apache Ant</code>
+      
+    </p>
+  </div>
+  
+  
+  
+  <h2 id="overview">Overview</h2>
+<p>This is a Java Swing desktop application designed to manage inventory, user accounts, and sales transactions for a retail store. It features role-based access control and uses a modern look-and-feel library for its UI.</p>
+<h2 id="architecture-and-structure">Architecture and Structure</h2>
+<p>The application follows a modular structure, separating the UI from the core logic.</p>
+<ul>
+<li><strong>Application UI Layer (<code>app/</code>):</strong> Contains all the Swing forms (<code>.java</code> and <code>.form</code> files), including main frames like <code>Login.java</code>, <code>CheckoutPanel.java</code>, and <code>InventoryManagement.java</code>, as well as various dialogs for adding/editing data.</li>
+<li><strong>Core Logic Layer (<code>libs/core/</code>):</strong> Contains the business logic and data management classes.
+<ul>
+<li><code>Accounts.java</code> &amp; <code>Inventory.java</code>: Manage collections of User and Product objects, respectively.</li>
+<li><code>AppStateManager.java</code>: A utility class that handles the loading and saving of the application&rsquo;s state (inventory, accounts, cart) by reading/writing serialized objects to <code>.dat</code> files.</li>
+<li><code>Cart.java</code>, <code>Product.java</code>, <code>User.java</code>: Model classes representing the main entities of the system.</li>
+</ul>
+</li>
+<li><strong>Error Handling Layer (<code>libs/errors/</code>):</strong> Defines custom exception classes like <code>InvalidUserPassword</code> and <code>OverdrawError</code> for robust error handling.</li>
+</ul>
+<h2 id="key-features">Key Features</h2>
+<ul>
+<li><strong>User Authentication and Roles:</strong> A login screen differentiates between Admin (full access) and User/Cashier (limited access) roles.</li>
+<li><strong>Full-Featured Inventory and User Management:</strong> Complete CRUD functionality for both products and user accounts (for admins).</li>
+<li><strong>Data Persistence:</strong> All application data is saved to and loaded from <code>.dat</code> files using Java Object Serialization, ensuring data is retained between application runs.</li>
+</ul>
+
+
+</div>
+
+
+    
+    <button id="theme-switcher" class="theme-switcher" title="Toggle dark mode">
+      ◐
+    </button>
+
+    
+    <script>
+      const themeSwitcher = document.getElementById("theme-switcher");
+      const doc = document.documentElement;
+      const savedTheme =
+        localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+      doc.setAttribute("data-theme", savedTheme);
+      themeSwitcher.addEventListener("click", () => {
+        const currentTheme = doc.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        doc.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      });
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brgy. San Antonio Community Hub | Psalmwel Kyle M. Conciso - Portfolio</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    
+<div class="container">
+  <a href="/" class="back-link">&larr; Back to Portfolio</a>
+  <h1>Brgy. San Antonio Community Hub</h1>
+
+  <div class="project-links">
+    
+      <a href="https://www.github.com/kyleconciso/brgy-san-antonio" target="_blank">View Repository &rarr;</a>
+    
+    
+  </div>
+
+  
+  <div class="video-container">
+    <iframe
+      src="https://www.youtube.com/embed/xqIp5v3NNJ8"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+  
+  
+  
+  <h2>Technologies Used</h2>
+  <div class="tech-tags">
+    <p>
+      
+        <code>React</code>
+      
+        <code>Material UI</code>
+      
+        <code>Node.js</code>
+      
+        <code>Express.js</code>
+      
+        <code>Firebase Admin SDK</code>
+      
+        <code>Genkit (Gemini)</code>
+      
+        <code>Firebase Firestore</code>
+      
+        <code>Firebase Authentication</code>
+      
+        <code>Docker</code>
+      
+        <code>Google Cloud Run</code>
+      
+        <code>Git</code>
+      
+    </p>
+  </div>
+  
+  
+  
+  <h2 id="overview">Overview</h2>
+<p>The &ldquo;Brgy. San Antonio Community Hub&rdquo; is a comprehensive web application designed to serve as the main online platform for Barangay San Antonio, Candon City. It aims to enhance communication, streamline services, and improve community engagement between residents and barangay officials. The project incorporates modern web technologies, AI-powered features, and accessibility options to cater to a diverse user base.</p>
+<h2 id="architecture-and-structure">Architecture and Structure</h2>
+<p>The system employs a client-server architecture with a clear separation of concerns between the frontend and backend.</p>
+<h3 id="client-frontend">Client (Frontend)</h3>
+<p>A Single-Page Application (SPA) built with React, located in the <code>client/</code> directory. The structure is organized for scalability:</p>
+<ul>
+<li><code>components/</code>: Contains reusable UI elements like layouts, navigation, and widgets.</li>
+<li><code>pages/</code>: Holds the main application screens (Admin, Public, User).</li>
+<li><code>api/</code>: Manages client-side API call functions that interact with the Express backend.</li>
+<li><code>contexts/</code>: Manages global state, such as <code>AuthContext</code> for user authentication.</li>
+<li><code>hooks/</code>: Contains custom React hooks like <code>useApi</code> and <code>useAuth</code> to abstract complex logic.</li>
+<li><code>App.js</code>: The main application component that defines routing and the overall layout.</li>
+</ul>
+<h3 id="server-backend">Server (Backend)</h3>
+<p>A Node.js Express application located in the <code>server/</code> directory. Key files and logic include:</p>
+<ul>
+<li><code>app.js</code>: Initializes the Firebase Admin SDK and sets up all middleware and routes.</li>
+<li><strong>Middleware:</strong> Implements <code>authenticate</code> middleware to verify Firebase ID tokens on protected routes, and <code>isAdmin</code> / <code>isEmployeeOrAdmin</code> for role-based authorization.</li>
+<li><strong>REST API:</strong> Defines a comprehensive set of RESTful routes under <code>/api/v1/</code> for Authentication, Content Management (pages, articles), a Ticket System, User Management, and the AI Chatbot.</li>
+</ul>
+<h2 id="key-features">Key Features</h2>
+<ul>
+<li><strong>User Authentication &amp; Authorization:</strong> Secure registration and login using Firebase Authentication. The backend enforces role-based access control (ADMIN, EMPLOYEE, RESIDENT) for different API endpoints.</li>
+<li><strong>Content Management System (CMS):</strong> Admins and employees can dynamically manage web content through a dashboard. A generic <code>ManagementPage</code> React component is used for CRUD operations across different content types (articles, pages, forms), promoting code reusability. A rich text editor (<code>react-quill</code>) is integrated for dynamic content creation.</li>
+<li><strong>Ticket/Concern System:</strong> Logged-in residents can submit tickets which are then managed by staff. Staff can update ticket statuses (OPEN, IN_PROGRESS, CLOSED) and communicate with residents via an integrated messaging system within the ticket.</li>
+<li><strong>AI Chatbot:</strong> A &ldquo;Barangay Assistant&rdquo; powered by Google Genkit and Gemini is trained on the public data in the Firestore database. It maintains conversational context to provide relevant answers to common queries about the barangay.</li>
+</ul>
+
+
+</div>
+
+
+    
+    <button id="theme-switcher" class="theme-switcher" title="Toggle dark mode">
+      ◐
+    </button>
+
+    
+    <script>
+      const themeSwitcher = document.getElementById("theme-switcher");
+      const doc = document.documentElement;
+      const savedTheme =
+        localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+      doc.setAttribute("data-theme", savedTheme);
+      themeSwitcher.addEventListener("click", () => {
+        const currentTheme = doc.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        doc.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+      });
+    </script>
+</body>
+</html>

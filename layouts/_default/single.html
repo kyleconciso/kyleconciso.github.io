@@ -1,0 +1,42 @@
+{{ define "main" }}
+<div class="container">
+  <a href="/" class="back-link">&larr; Back to Portfolio</a>
+  <h1>{{ .Title }}</h1>
+
+  <div class="project-links">
+    {{ with .Params.repo_url }}
+      <a href="{{ . }}" target="_blank">View Repository &rarr;</a>
+    {{ end }}
+    {{ with .Params.demo_url }}
+      <a href="{{ . }}" target="_blank">Live Demo &rarr;</a>
+    {{ end }}
+  </div>
+
+  {{ with .Params.video_url }}
+  <div class="video-container">
+    <iframe
+      src="{{ . }}"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+  {{ end }}
+  
+  {{ if .Params.stack }}
+  <h2>Technologies Used</h2>
+  <div class="tech-tags">
+    <p>
+      {{ range .Params.stack }}
+        <code>{{ . }}</code>
+      {{ end }}
+    </p>
+  </div>
+  {{ end }}
+  
+  {{/* This renders the main content from your Markdown file */}}
+  {{ .Content }}
+
+</div>
+{{ end }}
