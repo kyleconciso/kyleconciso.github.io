@@ -5,6 +5,7 @@ oneliner: "An ongoing thesis research project to improve early disease detection
 category: "Academic, Thesis/Research"
 stack: ["Python", "PyTorch", "TensorFlow", "Vision Transformer (VIT)", "CNN", "MobileViTv3"]
 repo_url: "https://www.github.com/kyleconciso/ViT-CNN-Coconut-Disease"
+demo_url: "/projects/coconut-disease-detection/demo/"
 ---
 
 ## Overview
