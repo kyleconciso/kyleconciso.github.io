@@ -15,3 +15,8 @@ This is an ongoing thesis project focused on improving the early detection of di
 *   **Build a Specialized Dataset:** Create and augment a specialized four-class dataset for coconut diseases. This involves gathering a base of images and then applying data augmentation techniques (e.g., rotation, scaling, flipping) to increase the dataset's size and diversity, which helps prevent overfitting and improves the model's ability to generalize.
 *   **Benchmark Performance:** Rigorously test and validate the model's performance using metrics like accuracy, precision, recall, and F1-score to confirm its effectiveness for deployment on edge devices.
 *   **Improve Early Detection:** The ultimate aim is to provide a tool that can help farmers identify diseases earlier, enabling quicker intervention and potentially reducing crop loss.
+
+## Interactive Demonstration
+You can run the web-based evaluation portal to execute live client-side inference using the optimized hybrid model configurations (featuring precomputed Grad-CAM attention visualizations):
+
+👉 **[Launch Model Demonstration & Evaluation Portal](demo/)**

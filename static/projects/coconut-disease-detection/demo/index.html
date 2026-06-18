@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid ViT-CNN Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.0/dist/ort.min.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="academic-container">
+        <header class="academic-header">
+            <div class="institution-meta">
+                <span>Mapúa Institute of Technology</span>
+                <span class="divider">•</span>
+                <span class="portal-badge">Model Demo</span>
+            </div>
+            <h1 class="paper-title">LIGHTWEIGHT HYBRID VIT-CNN FOR ENHANCED COCONUT DISEASE DETECTION USING MOBILEVITV3</h1>
+            <div class="author-meta">
+                <strong>Authors:</strong> Psalmwel Kyle M. Conciso, Jaden Louie E. Laudes, Kristian A. Soner
+            </div>
+        </header>
+
+        <main class="portal-grid">
+            <div class="grid-column">
+                <section class="card">
+                    <h2 class="card-title"><i class="fa-solid fa-gear"></i> Model Selection & Specifications</h2>
+                    <p class="card-desc">Select one of the trained hybrid architectures to load into the client-side execution session.</p>
+                    <div class="form-group">
+                        <select id="model-select">
+                            <optgroup label="Recommended Architecture">
+                                <option value="mobilevitv3_xs" data-size="8.40 MB" data-flops="0.18" data-f1="98.7%" data-params="2.30 M" selected>MobileViTv3-XS (Lightweight Hybrid)</option>
+                            </optgroup>
+                            <optgroup label="Other Hybrid Architectures">
+                                <option value="mobilevitv3_xxs" data-size="3.96 MB" data-flops="0.08" data-f1="98.2%" data-params="1.25 M">MobileViTv3-XXS (Ultra-Lightweight Hybrid)</option>
+                                <option value="mobilevitv3_s" data-size="20.21 MB" data-flops="0.52" data-f1="99.1%" data-params="5.60 M">MobileViTv3-S (Hybrid)</option>
+                            </optgroup>
+                            <optgroup label="CNN Baselines">
+                                <option value="mobilenetv3_small_100" data-size="6.37 MB" data-flops="0.06" data-f1="94.8%" data-params="1.52 M">MobileNetV3-Small (CNN Baseline)</option>
+                                <option value="efficientnet_b0" data-size="16.55 MB" data-flops="0.39" data-f1="96.5%" data-params="4.02 M">EfficientNet-B0 (CNN Baseline)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="spec-table">
+                        <div class="spec-row">
+                            <span class="spec-label">Model Architecture</span>
+                            <span class="spec-value id-value" id="spec-arch">MobileViTv3 (Hybrid)</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Parameter Count</span>
+                            <span class="spec-value" id="spec-params">2.30 M</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">FLOPs (Inference Complexity)</span>
+                            <span class="spec-value" id="spec-flops">0.18 GFLOPs</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">Validation F1-Score (Macro)</span>
+                            <span class="spec-value" id="spec-f1">98.70%</span>
+                        </div>
+                        <div class="spec-row">
+                            <span class="spec-label">ONNX File Size</span>
+                            <span class="spec-value" id="spec-size">8.40 MB</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2 class="card-title"><i class="fa-solid fa-circle-plus"></i> Image Input Source</h2>
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="upload-tab">File Upload</button>
+                        <button class="tab-btn" data-tab="camera-tab">Live Camera</button>
+                        <button class="tab-btn" data-tab="samples-tab">Evaluation Samples</button>
+                    </div>
+
+                    <div class="tab-content active" id="upload-tab">
+                        <div class="academic-dropzone" id="dropzone">
+                            <input type="file" id="file-input" accept="image/*" style="display: none;">
+                            <i class="fa-solid fa-file-image upload-icon"></i>
+                            <p class="upload-text">Select or drag & drop leaf image for inference</p>
+                            <span class="upload-subtext">Supported formats: PNG, JPG, JPEG (auto-cropped to square input resolution)</span>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="camera-tab">
+                        <div class="camera-card">
+                            <video id="video" autoplay playsinline style="display: none;"></video>
+                            <canvas id="canvas-capture" style="display: none;"></canvas>
+                            <div class="camera-viewfinder" id="camera-viewfinder">
+                                <i class="fa-solid fa-camera camera-placeholder-icon"></i>
+                                <span>Camera stream inactive</span>
+                            </div>
+                            <div class="camera-btn-group">
+                                <button id="start-camera" class="btn btn-secondary">Initialize Camera</button>
+                                <button id="capture-btn" class="btn btn-primary" disabled>Capture Frame</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="samples-tab">
+                        <p class="tab-desc">Standardized evaluation samples validated by botanical experts:</p>
+                        <div class="academic-samples-grid">
+                            <div class="sample-card" data-path="samples/bud_rot_sample.jpg" data-class="Bud Rot">
+                                <img src="samples/bud_rot_sample.jpg" alt="Bud Rot Sample">
+                                <div class="sample-label">Bud Rot</div>
+                            </div>
+                            <div class="sample-card" data-path="samples/gray_leaf_spot_sample.jpg" data-class="Gray Leaf Spot">
+                                <img src="samples/gray_leaf_spot_sample.jpg" alt="Gray Leaf Spot Sample">
+                                <div class="sample-label">Gray Leaf Spot</div>
+                            </div>
+                            <div class="sample-card" data-path="samples/leaf_rot_sample.jpg" data-class="Leaf Rot">
+                                <img src="samples/leaf_rot_sample.jpg" alt="Leaf Rot Sample">
+                                <div class="sample-label">Leaf Rot</div>
+                            </div>
+                            <div class="sample-card" data-path="samples/stem_bleeding_sample.jpg" data-class="Stem Bleeding">
+                                <img src="samples/stem_bleeding_sample.jpg" alt="Stem Bleeding Sample">
+                                <div class="sample-label">Stem Bleeding</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="grid-column">
+                <section class="card">
+                    <h2 class="card-title"><i class="fa-solid fa-eye"></i> Visual Inspection Area</h2>
+                    <div class="inspection-controls" id="inspection-controls" style="display: none;">
+                        <div class="view-toggle">
+                            <button class="toggle-btn active" id="btn-view-gradcam">Grad-CAM Heatmap</button>
+                            <button class="toggle-btn" id="btn-view-original">Original Image</button>
+                        </div>
+                        <div class="gradcam-note" id="gradcam-note" style="display: none;">
+                            * Grad-CAM attention visualization is only available for pre-validated evaluation samples (computed via offline PyTorch backpropagation; client-side execution uses WebAssembly CPU inference which does not compute gradients).
+                        </div>
+                    </div>
+
+                    <div class="preview-box">
+                        <div class="preview-empty" id="preview-placeholder">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            <p>No image loaded. Upload an image, use the camera, or select an evaluation sample to run model evaluation.</p>
+                        </div>
+                        <img id="image-preview" src="#" alt="Visual Inspection Preview" style="display: none;">
+                        <span class="preview-dim" id="image-dimensions" style="display: none;"></span>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h2 class="card-title"><i class="fa-solid fa-square-poll-horizontal"></i> Quantitative Predictions</h2>
+                    <div class="session-status" id="model-status">
+                        <i class="fa-solid fa-circle-dot status-indicator"></i>
+                        <span id="status-text">Ready. Please provide an input image.</span>
+                    </div>
+                    <div class="predictions-wrapper" id="predictions-list" style="display: none;">
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="academic-footer">
+            <p>Based on the manuscript published in Mapúa Institute of Technology, 2026.</p>
+            <p class="copyright">© 2026 Psalmwel Kyle M. Conciso, Jaden Louie E. Laudes, Kristian A. Soner. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="index.js"></script>
+</body>
+</html>
