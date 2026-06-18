@@ -291,7 +291,7 @@ function showPreview(img, isSample = false, samplePath = null) {
         btnViewOriginal.classList.remove('active');
         gradcamNote.style.display = 'none';
 
-        imagePreview.src = samplePath.replace('_sample.jpg', '_gradcam.jpg');
+        imagePreview.src = img.src;
     } else {
         currentViewMode = 'original';
         btnViewGradcam.disabled = true;
@@ -310,19 +310,62 @@ function showPreview(img, isSample = false, samplePath = null) {
     imageDimensions.style.display = 'block';
 }
 
+async function fetchWithProgress(url, onProgress) {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const contentLength = response.headers.get('content-length');
+    if (!contentLength) {
+        const arrayBuffer = await response.arrayBuffer();
+        return arrayBuffer;
+    }
+    const totalBytes = parseInt(contentLength, 10);
+    let loadedBytes = 0;
+
+    const reader = response.body.getReader();
+    const chunks = [];
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        loadedBytes += value.length;
+        if (onProgress) {
+            onProgress(loadedBytes, totalBytes);
+        }
+    }
+
+    const uint8Array = new Uint8Array(loadedBytes);
+    let position = 0;
+    for (const chunk of chunks) {
+        uint8Array.set(chunk, position);
+        position += chunk.length;
+    }
+    return uint8Array.buffer;
+}
+
 async function classifyImage(img) {
     const config = MODEL_CONFIGS[currentModelName];
     if (!config) return;
 
+    if (isPresetSample) {
+        imagePreview.src = img.src;
+    }
+
     updateStatus('loading', `Loading model ${currentModelName}.onnx...`);
 
     try {
-
         let session = sessionCache[currentModelName];
         if (!session) {
-
             const options = { executionProviders: ['wasm'] };
-            session = await ort.InferenceSession.create(config.path, options);
+            const modelBuffer = await fetchWithProgress(config.path, (loaded, total) => {
+                const pct = Math.round((loaded / total) * 100);
+                const loadedMB = (loaded / (1024 * 1024)).toFixed(2);
+                const totalMB = (total / (1024 * 1024)).toFixed(2);
+                updateStatus('loading', `Downloading model: ${pct}% (${loadedMB} MB / ${totalMB} MB)...`);
+            });
+            updateStatus('loading', 'Initializing ONNX session...');
+            session = await ort.InferenceSession.create(modelBuffer, options);
             sessionCache[currentModelName] = session;
         }
 
@@ -376,6 +419,10 @@ async function classifyImage(img) {
 
         renderResults(probs);
         updateStatus('success', `Inference finished: Latency = ${latency} ms | Provider = WASM`);
+
+        if (isPresetSample && currentViewMode === 'gradcam' && currentSamplePath) {
+            imagePreview.src = currentSamplePath.replace('_sample.jpg', '_gradcam.jpg');
+        }
 
     } catch (err) {
         console.error('Classification error:', err);
